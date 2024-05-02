@@ -1,18 +1,53 @@
-static CODE_FRAGMENT: &'static str = r#"// This is the main function.
+#[allow(dead_code)]
+#[derive(Clone, Copy, Debug)]
+struct Count {
+    lines_in_total: usize,
+    lines_containing_code: usize,
+    empty_lines: usize,
+    code_symbols: usize,
+}
+
+impl Count {
+
+    #[allow(dead_code)]
+    pub fn calculate(text: &str) -> Count {
+        let mut count = Count {
+            lines_in_total: 0,
+            lines_containing_code: 0,
+            empty_lines: 0,
+            code_symbols: 0,
+        };
+
+        for line in text.lines() {
+            count.lines_in_total += 1;
+
+            if line.trim().is_empty() {
+                count.empty_lines += 1;
+            } else {
+                count.lines_containing_code += 1;
+                count.code_symbols += line.len(); // Including whitespace and line breaks
+            }
+        }
+
+        count.code_symbols += count.lines_in_total - 1; 
+        count
+    }
+}
+
 fn main() {
-    // Statements here are executed when the compiled binary is called.
+   
+   let text = r#" 
+   candidate : hello mam i have submited my assignment
 
-    // Print text to the console.
-    println!("Hello World!");
-}"#;
+   hr : ok we will get back to you 
 
+   candidate : still waiting for the good reseponce 
+   candidate : i hope i will get the chance to show my skills 
+   "#;
 
-fn main() {
-    let total_num_of_lines = CODE_FRAGMENT.lines().count();
-    let lines_containing = CODE_FRAGMENT.lines().filter(|lines| !lines.trim().is_empty() && !lines.trim().starts_with("\n")).count();
-    let empty_line = CODE_FRAGMENT.lines().filter(|line| line.trim().is_empty()).count();
-
-    println!("Lines in total: {}", total_num_of_lines);
-    println!("Lines containing code: {}", lines_containing);
-    println!("Empty lines: {}", empty_line);
+    let result = Count::calculate(text);
+    println!("Lines in total: {}", result.lines_in_total);
+    println!("Lines containing code: {}", result.lines_containing_code);
+    println!("Empty lines: {}", result.empty_lines);
+    println!("Number of characters of code: {}", result.code_symbols);
 }
