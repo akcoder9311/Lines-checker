@@ -28,10 +28,10 @@ impl Count {
             } else {
                 count.lines_containing_code += 1;
 
-                // include the whitespace and line breaker
+                // count all the characters present in the line
                 count.code_symbols += line.chars().count();
 
-                // exclude the the line breacker /n
+                // exclude the the line breacker /n character
                 if line.ends_with("\n"){
                     count.code_symbols -= 1;
                 }
