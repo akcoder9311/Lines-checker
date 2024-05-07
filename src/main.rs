@@ -21,11 +21,24 @@ impl Count {
         for line in text.lines() {
             count.lines_in_total += 1;
 
+
             if line.trim().is_empty() {
                 count.empty_lines += 1;
+
+                if line.ends_with("\n"){
+                    count.code_symbols -= 1;
+                }
             } else {
                 count.lines_containing_code += 1;
-                count.code_symbols += line.len(); // Including whitespace and line breaks
+
+                // include the whitespace and line breaker
+                count.code_symbols += line.chars().count();
+
+                // exclude the the line breacker /n
+                if line.ends_with("\n"){
+                    count.code_symbols -= 1;
+                }
+                 
             }
         }
 
@@ -36,14 +49,16 @@ impl Count {
 
 fn main() {
    
-   let text = r#" 
-   candidate : hello mam i have submited my assignment
+    let text = r#" 
+    candidate : hello mam i have submited my assignment
+ 
+    hr : ok we will get back to you 
+ 
+    candidate : still waiting for the good reseponce 
+    candidate : i hope i will get the chance to show my skills 
+    "#;
 
-   hr : ok we will get back to you 
-
-   candidate : still waiting for the good reseponce 
-   candidate : i hope i will get the chance to show my skills 
-   "#;
+   println!("{}",text.chars().count());
 
     let result = Count::calculate(text);
     println!("Lines in total: {}", result.lines_in_total);
@@ -51,3 +66,6 @@ fn main() {
     println!("Empty lines: {}", result.empty_lines);
     println!("Number of characters of code: {}", result.code_symbols);
 }
+
+
+
